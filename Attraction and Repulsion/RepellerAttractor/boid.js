@@ -8,14 +8,14 @@ function Boid() {
 
 	this.render = function() {
 		push();
-  		fill(55, 80, 250);
-  		ellipse(this.loc.x, this.loc.y, this.radius, this.radius);
+		fill(55, 80, 250);
+		ellipse(this.loc.x, this.loc.y, this.radius, this.radius);
 		pop();
 		push();
-  		fill(255, 100, 0);
-  		noStroke();
-  		ellipse(this.loc.x, this.loc.y, 10, 10);
-  	pop();
+		fill(255, 100, 0);
+		noStroke();
+		ellipse(this.loc.x, this.loc.y, 10, 10);
+		pop();
 
 	}
 
@@ -34,34 +34,34 @@ function Boid() {
 		// If in range of r1--run for your life!
 
 		for (var i = 0; i < repellers.length; i++){
-		if(this.loc.dist(repellers[i].loc) < 50){
-			this.applyForce(this.force);
-			this.vel.add(this.force);
-			this.vel.limit(random(3,6));
-		} else if(this.loc.dist(repellers[i].loc) < 90){
-			this.applyForce(this.force);
-			this.vel.add(this.force);
-			this.vel.limit(random(1,2));
+			if(this.loc.dist(repellers[i].loc) < 50){
+				this.applyForce(this.force);
+				this.vel.add(this.force);
+				this.vel.limit(random(3,6));
+			} else if(this.loc.dist(repellers[i].loc) < 90){
+				this.applyForce(this.force);
+				this.vel.add(this.force);
+				this.vel.limit(random(1,2));
+			}
+			else if(this.loc.dist(attractors[i].loc) < 300){
+				this.applyForce(this.force2);
+				this.vel.add(this.force2.mult(state));
+				this.vel.limit(random(2.1, 3.4));
+			} else if(this.loc.dist(attractors[i].loc) < 500){
+				this.applyForce(this.force2);
+				this.vel.add(this.force2.mult(state));
+				this.vel.limit(random(0.5, 1.2));
+			}else{
+				//this.vel.add(this.force);
+				this.vel.limit(1);
+			}
 		}
-	  else if(this.loc.dist(attractors[i].loc) < 150){
-			this.applyForce(this.force2);
-			this.vel.add(this.force2.mult(state));
-			this.vel.limit(random(3,6));
-		} else if(this.loc.dist(attractors[i].loc) < 200){
-			this.applyForce(this.force2);
-			this.vel.add(this.force2.mult(state));
-			this.vel.limit(random(1,2));
-		}else{
-			//this.vel.add(this.force);
-			this.vel.limit(1);
-		}
-	}
 		this.loc.add(this.vel);
 		this.acc.mult(0);
-	//bounce off walls
-	this.checkEdges = function() {
-		if (this.loc.x > width || this.loc.x < 0) this.vel.x *= -1;
-		if (this.loc.y > height || this.loc.y < 0) this.vel.y *= -1;
+		//bounce off walls
+		this.checkEdges = function() {
+			if (this.loc.x > width || this.loc.x < 0) this.vel.x *= -1;
+			if (this.loc.y > height || this.loc.y < 0) this.vel.y *= -1;
+		}
 	}
-}
 }

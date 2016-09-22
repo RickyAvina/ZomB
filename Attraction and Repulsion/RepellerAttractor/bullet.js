@@ -1,5 +1,4 @@
 function Bullet(x,y) {
-  this.isClicked = false;
   this.loc = createVector(a1.loc.x, a1.loc.y);
   this.vel = createVector(0,0);
   this.acc = createVector(0,0);
@@ -34,7 +33,7 @@ function Bullet(x,y) {
   	this.force = force;
   	this.applyForce(force);
   	this.vel.add(this.acc);
-  	this.vel.limit(5);
+  	this.vel.limit(10);
   	this.loc.add(this.vel);
 
     this.death();

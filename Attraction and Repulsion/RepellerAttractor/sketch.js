@@ -11,9 +11,6 @@ var numRep = 1;
 var bullet;
 var bullets = [];
 
-var bulletVars = [];
-var t = false;
-
 var state = -1;
 var g = 1;
 
@@ -37,7 +34,7 @@ function setup() {
 }
 
 function draw() {
-	//background(62);
+	background(62);
 	push();
 	fill(120, 120, 140, 25);
 	rect(0, 0, width, height);
@@ -56,9 +53,7 @@ function draw() {
 	}
 
 	for (var i = 0; i < bullets.length; i++){
-		if (bullets[i].isClicked === true){
 			bullets[i].run();
-		}
 	}
 }
 
@@ -82,7 +77,6 @@ function loadBoids() {
 
 function mousePressed() {
 	bullets.push(new Bullet(mouseX, mouseY));
-	bullets[bullets.length-1].isClicked = true;
 }
 
 function keyPressed(){
@@ -97,9 +91,3 @@ function keyPressed(){
 		g *= -1;
 	}
 }
-
-
-// Boid.prototype.render = function() {
-// 	fill(200, 30, 150);
-// 	ellipse(this.loc.x, this.loc.y, 30, 30);
-// }
