@@ -14,6 +14,15 @@ var bullets = [];
 var state = -1;
 var g = 1;
 
+var time;
+var wait = 600;
+var reload = false;
+
+var pickUp;
+
+var bulletTypes = [1,2,3];
+var b;
+
 function setup() {
 	var cnv = createCanvas(900, 800);
 	var x = (windowWidth - width) / 2;
@@ -21,6 +30,7 @@ function setup() {
 	cnv.position(x, y);
 	fill(200, 200, 0);
 
+	b = 1;
 	//attractor = new Mover(false);
 	Repeller.prototype = new Mover();
 	Boid.prototype = new Mover();
@@ -30,7 +40,10 @@ function setup() {
 	b1 = new Boid(); // this must come after inherittance to receive
 	a1 = new Attractor();
 
+	pickUp = new PickUp();
+
 	loadBoids();
+	time = millis();
 }
 
 function draw() {
@@ -40,6 +53,7 @@ function draw() {
 	rect(0, 0, width, height);
 	pop();
 
+	pickUp.run();
 	for (var i = 0; i < boids.length; i++) {
 		boids[i].run();
 	}
@@ -54,6 +68,13 @@ function draw() {
 
 	for (var i = 0; i < bullets.length; i++){
 			bullets[i].run();
+	}
+
+	if (reload === true){
+		if (millis() - time >= wait){
+			reload = false;
+			time = millis();
+		}
 	}
 }
 
@@ -76,7 +97,13 @@ function loadBoids() {
 }
 
 function mousePressed() {
-	bullets.push(new Bullet(mouseX, mouseY));
+	var bulletType = bulletTypes[b];
+
+	if (reload === false){
+		bullets.push(new Bullet(mouseX, mouseY, bulletType));
+		print("BulletType: " + bulletType);
+		reload = true;
+}
 }
 
 function keyPressed(){
