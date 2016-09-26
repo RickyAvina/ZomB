@@ -1,3 +1,6 @@
+var w = window.innerWidth *0.8;
+var h = window.innerHeight *0.8;
+
 var mover;
 var boids = [];
 var numBoids = 50;
@@ -24,7 +27,7 @@ var bulletTypes = [1,2,3];
 var b;
 
 function setup() {
-	var cnv = createCanvas(900, 800);
+	var cnv = createCanvas(w, h);
 	var x = (windowWidth - width) / 2;
 	var y = (windowHeight - height) / 2;
 	cnv.position(x, y);
@@ -47,11 +50,18 @@ function setup() {
 }
 
 function draw() {
-	background(62);
-	push();
-	fill(120, 120, 140, 25);
-	rect(0, 0, width, height);
-	pop();
+	background(180);
+		push();
+		noStroke();
+		fill(255, 51, 51);
+		rect(0, height - 60, width, 60);
+		rect(0, 0, width, 10);
+		rect(width - 10, 0, 10, height);
+		rect(0, 0, 150, height);
+		pop();
+		fill(80);
+		strokeWeight(4);
+		rect(150, 10, width - 160, height - 70);
 
 	pickUp.run();
 	for (var i = 0; i < boids.length; i++) {
