@@ -1,14 +1,24 @@
-function Bullet(x,y) {
+function Bullet(x, y, bulletType) {
   this.loc = createVector(a1.loc.x, a1.loc.y);
   this.vel = createVector(0,0);
   this.acc = createVector(0,0);
   this.rad = 10;
   this.force = createVector(5.0, 0);
-
+  this.reloadSpeed = 0;
   var mouse = createVector(x, y);
   this.force = p5.Vector.sub(mouse, a1.loc);
 
   this.force.normalize();
+
+  if (bulletType === 0){
+    this.radius = 10;
+  } else if (bulletType === 1){
+    this.radius = 20;
+  } else if (bulletType === 2){
+    this.radius = 50;
+  } else {
+
+  }
 }
 
   Bullet.prototype.run = function() {
@@ -21,7 +31,8 @@ function Bullet(x,y) {
   }
 
   Bullet.prototype.render = function() {
-  	  strokeWeight(4);
+  	  //strokeWeight(4);
+      noStroke();
       fill(255,120,240);
   		//stroke(255, 255, 255);
   		ellipse(this.loc.x, this.loc.y, this.rad, this.rad);

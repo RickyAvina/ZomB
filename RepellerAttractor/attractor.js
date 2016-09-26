@@ -11,16 +11,16 @@ function Attractor() {
 }
 
 	this.update = function(){
-		if(keyIsDown(65)){
+		if(keyIsDown(LEFT_ARROW)){
 			this.loc.x -= 5;
 		}
-		if(keyIsDown(68)){
+		if(keyIsDown(RIGHT_ARROW)){
 			this.loc.x += 5;
 		}
-		if(keyIsDown(83)){
+		if(keyIsDown(DOWN_ARROW)){
 			this.loc.y += 5;
 		}
-		if(keyIsDown(87)){
+		if(keyIsDown(UP_ARROW)){
 			this.loc.y -= 5;
 		}
 	}
