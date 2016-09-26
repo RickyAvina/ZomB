@@ -2,7 +2,7 @@ function Bullet(x, y, bulletType) {
   this.loc = createVector(a1.loc.x, a1.loc.y);
   this.vel = createVector(0,0);
   this.acc = createVector(0,0);
-  this.rad = 10;
+   this.rad = 10;
   this.force = createVector(5.0, 0);
   this.reloadSpeed = 0;
   var mouse = createVector(x, y);
@@ -11,13 +11,13 @@ function Bullet(x, y, bulletType) {
   this.force.normalize();
 
   if (bulletType === 0){
-    this.radius = 10;
+    this.rad = 10;
   } else if (bulletType === 1){
-    this.radius = 20;
+    this.rad = 100;
   } else if (bulletType === 2){
-    this.radius = 50;
+    this.rad = height*width;
   } else {
-
+    this.rad = 15;
   }
 }
 
@@ -43,7 +43,7 @@ function Bullet(x, y, bulletType) {
   	this.force = force;
   	this.applyForce(force);
   	this.vel.add(this.acc);
-  	this.vel.limit(10);
+  	this.vel.limit(20);
   	this.loc.add(this.vel);
 
     this.death();
@@ -51,7 +51,7 @@ function Bullet(x, y, bulletType) {
 
   Bullet.prototype.death = function(){
     for (var i = 0; i < boids.length; i++){
-      if(this.loc.dist(boids[i].loc) <= 15){
+      if(this.loc.dist(boids[i].loc) <= 10 + this.rad/2){
         boids.splice(i, 1);
       }
     }

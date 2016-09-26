@@ -23,7 +23,7 @@ var reload = false;
 
 var pickUp;
 
-var bulletTypes = [1,2,3];
+var bulletTypes = [0,1,2];
 var b;
 
 function setup() {
@@ -33,7 +33,7 @@ function setup() {
 	cnv.position(x, y);
 	fill(200, 200, 0);
 
-	b = 1;
+	b = 0;
 	//attractor = new Mover(false);
 	Repeller.prototype = new Mover();
 	Boid.prototype = new Mover();
@@ -51,17 +51,17 @@ function setup() {
 
 function draw() {
 	background(180);
-		push();
-		noStroke();
-		fill(255, 51, 51);
-		rect(0, height - 60, width, 60);
-		rect(0, 0, width, 10);
-		rect(width - 10, 0, 10, height);
-		rect(0, 0, 150, height);
-		pop();
-		fill(80);
-		strokeWeight(4);
-		rect(150, 10, width - 160, height - 70);
+	push();
+	noStroke();
+	fill(255, 51, 51);
+	rect(0, height - 60, width, 60);
+	rect(0, 0, width, 10);
+	rect(width - 10, 0, 10, height);
+	rect(0, 0, 150, height);
+	pop();
+	fill(80);
+	strokeWeight(4);
+	rect(150, 10, width - 160, height - 70);
 
 	pickUp.run();
 	for (var i = 0; i < boids.length; i++) {
@@ -77,7 +77,7 @@ function draw() {
 	}
 
 	for (var i = 0; i < bullets.length; i++){
-			bullets[i].run();
+		bullets[i].run();
 	}
 
 	if (reload === true){
@@ -107,13 +107,14 @@ function loadBoids() {
 }
 
 function mousePressed() {
+
 	var bulletType = bulletTypes[b];
 
 	if (reload === false){
 		bullets.push(new Bullet(mouseX, mouseY, bulletType));
 		print("BulletType: " + bulletType);
 		reload = true;
-}
+	}
 }
 
 function keyPressed(){

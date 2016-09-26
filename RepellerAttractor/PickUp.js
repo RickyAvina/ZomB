@@ -15,7 +15,7 @@ function PickUp(){
 
   this.update = function(){
     if (this.location.dist(attractors[0].loc) <= 15 + this.radius/2){
-      b = 3;
+      b = round(random(0,2));
     }
   }
 }
