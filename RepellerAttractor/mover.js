@@ -8,7 +8,7 @@ function Mover() {
 }
 
 Mover.prototype.run = function() {
-	this.update(this.force);
+	this.update(this.force);// default = (0,0)
 	this.checkEdges();
 	this.render();
 }
@@ -27,6 +27,7 @@ Mover.prototype.render = function() {
 }
 
 Mover.prototype.update = function(force) {
+	//setTimeout(changeMoverAcc, 500);
 	this.force = force;
 	this.applyForce(force);
 	this.vel.add(this.acc);
@@ -35,9 +36,9 @@ Mover.prototype.update = function(force) {
 }
 
 Mover.prototype.checkEdges = function() {
-	if (this.loc.x > width - 10 - this.rad) this.loc.x = 150 + this.rad;
-	if (this.loc.x < 150 + this.rad) this.loc.x = width - 10 - this.rad;
-	if (this.loc.y > height - 60 - this.rad) this.loc.y = 10 + this.rad;
-	if (this.loc.y < 10 + this.rad) this.loc.y = height - 60 - this.rad;
+	if (this.loc.x > width) this.loc.x = 0;
+	if (this.loc.x < 0) this.loc.x = width;
+	if (this.loc.y > height) this.loc.y = 0;
+	if (this.loc.y < 0) this.loc.y = height;
 
 }
