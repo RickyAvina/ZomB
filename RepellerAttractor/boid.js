@@ -46,16 +46,15 @@ function Boid() {
 				this.vel.add(this.force2.mult(state));
 				this.vel.limit(random(0.5, 1.2));
 			}else{
-				//this.vel.add(this.force);
 				this.vel.limit(1);
 			}
 		}
 		this.loc.add(this.vel);
 		this.acc.mult(0);
-		//bounce off walls
+
 		this.checkEdges = function() {
-			if (this.loc.x > width - 10 - this.radius || this.loc.x < 150 + this.radius) this.vel.x *= -1;
-			if (this.loc.y > height - 60 - this.radius || this.loc.y < 10 ) this.vel.y *= -1;
+			if (this.loc.x > width - 10 - this.radius/2 || this.loc.x < 150 + this.radius/2) this.vel.x *= -1;
+			if (this.loc.y > height - 60 - this.radius/2 || this.loc.y < 10 - this.radius/2 ) this.vel.y *= -1;
 		}
 	}
 }

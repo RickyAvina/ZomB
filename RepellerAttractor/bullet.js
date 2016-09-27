@@ -15,14 +15,14 @@ function Bullet(x, y, bulletType) {
   } else if (bulletType === 1){
     this.rad = 100;
   } else if (bulletType === 2){
-    this.rad = height*width;
+    this.rad = 100;
   } else {
     this.rad = 15;
   }
 }
 
   Bullet.prototype.run = function() {
-  	this.update(this.force);   // default = (0,0)
+  	this.update(this.force);
   	this.render();
   }
 
@@ -31,10 +31,8 @@ function Bullet(x, y, bulletType) {
   }
 
   Bullet.prototype.render = function() {
-  	  //strokeWeight(4);
       noStroke();
       fill(255,120,240);
-  		//stroke(255, 255, 255);
   		ellipse(this.loc.x, this.loc.y, this.rad, this.rad);
       stroke(0);
   }

@@ -1,7 +1,7 @@
 function PickUp(){
-  this.location = createVector(random(width), random(height));
   this.pickedUp = false;
   this.radius = 50;
+  this.location = createVector(random(150 + this.radius, width - 10 - this.radius), random(10 + this.radius, height - 60 - this.radius));
 
   this.run = function(){
     this.display();

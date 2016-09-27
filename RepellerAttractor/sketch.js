@@ -32,15 +32,14 @@ function setup() {
 	var y = (windowHeight - height) / 2;
 	cnv.position(x, y);
 	fill(200, 200, 0);
-
 	b = 0;
-	//attractor = new Mover(false);
+
 	Repeller.prototype = new Mover();
 	Boid.prototype = new Mover();
 	Attractor.prototype = new Mover();
-	//Boid.prototype.constructor = Boid;
+
 	r1 = new Repeller();
-	b1 = new Boid(); // this must come after inherittance to receive
+	b1 = new Boid();
 	a1 = new Attractor();
 
 	pickUp = new PickUp();
@@ -69,11 +68,9 @@ function draw() {
 	}
 	for (var i = 0; i < attractors.length; i++) {
 		attractors[i].run();
-		//a1.run();
 	}
 	for (var i = 0; i < repellers.length; i++) {
 		repellers[i].run();
-		//r1.run();
 	}
 
 	for (var i = 0; i < bullets.length; i++){
