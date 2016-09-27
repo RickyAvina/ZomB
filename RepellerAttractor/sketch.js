@@ -23,8 +23,10 @@ var reload = false;
 
 var pickUp;
 
+
 var bulletTypes = [0,1,2];
 var b;
+var time2;
 
 function setup() {
 	var cnv = createCanvas(w, h);
@@ -43,6 +45,7 @@ function setup() {
 	b1 = new Boid(); // this must come after inherittance to receive
 	a1 = new Attractor();
 
+	// pickUps.push(new PickUp());
 	pickUp = new PickUp();
 
 	loadBoids();
@@ -63,6 +66,10 @@ function draw() {
 	strokeWeight(4);
 	rect(150, 10, width - 160, height - 70);
 
+   //print(pickUps[0].pickedUp);
+//	for (var i = 0; i < pickUps.length; i++){
+	//		pickUps[i].run();
+	//}
 	pickUp.run();
 	for (var i = 0; i < boids.length; i++) {
 		boids[i].run();

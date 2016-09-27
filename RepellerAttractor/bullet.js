@@ -15,7 +15,7 @@ function Bullet(x, y, bulletType) {
   } else if (bulletType === 1){
     this.rad = 100;
   } else if (bulletType === 2){
-    this.rad = height*width;
+    this.rad = height;
   } else {
     this.rad = 15;
   }

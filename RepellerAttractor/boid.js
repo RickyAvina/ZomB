@@ -55,7 +55,7 @@ function Boid() {
 		//bounce off walls
 		this.checkEdges = function() {
 			if (this.loc.x > width - 10 - this.radius || this.loc.x < 150 + this.radius) this.vel.x *= -1;
-			if (this.loc.y > height - 60 - this.radius || this.loc.y < 10 ) this.vel.y *= -1;
+			if (this.loc.y > height - 60 - this.radius || this.loc.y < this.radius) this.vel.y *= -1;
 		}
 	}
 }

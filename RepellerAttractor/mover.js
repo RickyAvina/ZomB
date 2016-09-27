@@ -36,9 +36,9 @@ Mover.prototype.update = function(force) {
 }
 
 Mover.prototype.checkEdges = function() {
-	if (this.loc.x > width) this.loc.x = 0;
-	if (this.loc.x < 0) this.loc.x = width;
-	if (this.loc.y > height) this.loc.y = 0;
-	if (this.loc.y < 0) this.loc.y = height;
+	if (this.loc.x > width - this.rad) this.loc.x = 150 + this.rad/2;
+	if (this.loc.x < 150 + this.rad/2) this.loc.x = width - this.rad/2 - 10;
+	if (this.loc.y > height - 60 - this.rad) this.loc.y = 10 + this.rad;
+	if (this.loc.y <  this.rad) this.loc.y = height - 70 - this.rad/2;
 
 }
