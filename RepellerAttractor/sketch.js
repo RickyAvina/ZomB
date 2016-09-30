@@ -1,3 +1,5 @@
+var cnv;
+
 var w = window.innerWidth *0.8;
 var h = window.innerHeight *0.8;
 
@@ -23,13 +25,11 @@ var reload = false;
 
 var pickUp;
 
-
 var bulletTypes = [0,1,2];
 var b;
-var time2;
 
 function setup() {
-	var cnv = createCanvas(w, h);
+	cnv = createCanvas(windowWidth,windowHeight);
 	var x = (windowWidth - width) / 2;
 	var y = (windowHeight - height) / 2;
 	cnv.position(x, y);
@@ -54,23 +54,28 @@ function setup() {
 
 function draw() {
 	background(180);
+	// border
 	push();
 	noStroke();
 	fill(255, 51, 51);
-	rect(0, height - 60, width, 60);
+	rect(0, height - 60, width, 70);
 	rect(0, 0, width, 10);
 	rect(width - 10, 0, 10, height);
 	rect(0, 0, 150, height);
 	pop();
 	fill(80);
 	strokeWeight(4);
-	rect(150, 10, width - 160, height - 70);
+	rect(150, 10, width - 160, height - 20);
+	// end border
+	push();
+	noStroke();
+	fill(122, 89, 250);
+	ellipse(width/2 + 100, height - 70, 300, 100);				// base 1
+	ellipse(width/2 + 100,  70, 300, 100);				// base 1
+	pop();
 
-   //print(pickUps[0].pickedUp);
-//	for (var i = 0; i < pickUps.length; i++){
-	//		pickUps[i].run();
-	//}
 	pickUp.run();
+
 	for (var i = 0; i < boids.length; i++) {
 		boids[i].run();
 	}
@@ -79,7 +84,7 @@ function draw() {
 		//a1.run();
 	}
 	for (var i = 0; i < repellers.length; i++) {
-		repellers[i].run();
+		//	repellers[i].run();
 		//r1.run();
 	}
 
@@ -110,7 +115,6 @@ function loadBoids() {
 	for (var i = 0; i < numRep; i++) {
 		repellers.push(new Repeller());
 	}
-
 }
 
 function mousePressed() {
@@ -127,7 +131,6 @@ function mousePressed() {
 function keyPressed(){
 	if (keyCode == 32) {
 		state *= -1;
-
 		if (g === 1){
 			attractors[0].color = color(255,0,0);
 		} else {
@@ -135,4 +138,8 @@ function keyPressed(){
 		}
 		g *= -1;
 	}
+}
+
+window.onresize = function() {
+	cnv.size(window.innerWidth, window.innerHeight);
 }

@@ -2,9 +2,11 @@ function Bullet(x, y, bulletType) {
   this.loc = createVector(a1.loc.x, a1.loc.y);
   this.vel = createVector(0,0);
   this.acc = createVector(0,0);
-   this.rad = 10;
+  this.rad = 10;
   this.force = createVector(5.0, 0);
   this.reloadSpeed = 0;
+  this.c = color(0,0,0);
+
   var mouse = createVector(x, y);
   this.force = p5.Vector.sub(mouse, a1.loc);
 
@@ -12,12 +14,16 @@ function Bullet(x, y, bulletType) {
 
   if (bulletType === 0){
     this.rad = 10;
+    this.c = color(125, 180, 240);
   } else if (bulletType === 1){
-    this.rad = 100;
+    this.rad = 20;
+    this.c = color(210, 20, 60);
   } else if (bulletType === 2){
-    this.rad = height;
+    this.rad = 30;
+    this.c = color(90, 40, 110);
   } else {
     this.rad = 15;
+    this.c = color(255);
   }
 }
 
@@ -33,7 +39,7 @@ function Bullet(x, y, bulletType) {
   Bullet.prototype.render = function() {
   	  //strokeWeight(4);
       noStroke();
-      fill(255,120,240);
+      fill(this.c);
   		//stroke(255, 255, 255);
   		ellipse(this.loc.x, this.loc.y, this.rad, this.rad);
       stroke(0);
