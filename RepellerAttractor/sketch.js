@@ -28,6 +28,14 @@ var pickUp;
 var bulletTypes = [0,1,2];
 var b;
 
+var s;
+var a;
+var c;
+
+s = 0.01;
+a = 0.01;
+c = 0.01;
+
 function setup() {
 	cnv = createCanvas(windowWidth,windowHeight);
 	var x = (windowWidth - width) / 2;
@@ -123,7 +131,6 @@ function mousePressed() {
 
 	if (reload === false){
 		bullets.push(new Bullet(mouseX, mouseY, bulletType));
-		print("BulletType: " + bulletType);
 		reload = true;
 	}
 }
@@ -142,4 +149,7 @@ function keyPressed(){
 
 window.onresize = function() {
 	cnv.size(window.innerWidth, window.innerHeight);
+	for (var i = 0; i < boids.length; i++){
+			boids[i].loc = createVector(random(150 + boids[i].radius, width - 10 - boids[i].radius), random(10 + boids[i].radius, height - 60 - boids[i].radius));
+	}
 }
