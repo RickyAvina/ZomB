@@ -8,18 +8,23 @@ function Boid() {
 	this.maxSpeed = 3;    // Maximum speed
 	this.maxForce = 0.05; // Maximum steering force
 
+  this.run = function(boids) {
+		this.flock(boids);
+		this.update();
+		this.checkEdges();
+		this.render();
+	}
 	this.render = function() {
 		push();
 		noStroke();
 		fill(100, 150, 0);
 		ellipse(this.loc.x, this.loc.y, this.radius, this.radius);
 		pop();
-
 	}
 
-	this.update = function(force) {
-		this.force = force;
-		this.force2 = force;
+	this.update = function() {
+		//this.force = force;
+	//	this.force2 = force;
 
 		this.fear = random(100, 200);
 		this.force = p5.Vector.sub(this.loc,r1.loc);
@@ -61,7 +66,7 @@ function Boid() {
 		}
 	}
 
-	Boid.prototype.flock = function(boids) {
+	this.flock = function(boids) {
 		var sep = this.separate(boids); // Separation
 		var ali = this.align(boids);    // Alignment
 		var coh = this.cohesion(boids); // Cohesion
@@ -156,5 +161,4 @@ function Boid() {
 			return createVector(0, 0);
 		}
 	}
-
 }
