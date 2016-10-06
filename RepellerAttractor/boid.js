@@ -3,10 +3,17 @@ function Boid() {
 	this.force = createVector(0,0);
 	this.force2 = createVector(0,0);
 	this.acc = createVector(random(.1, .9), random(-.9, .1));
-	this.vel = createVector(random(-3, 3), random(-3, 3));
+	this.vel = p5.Vector.random2D();
 	this.loc = createVector(random(150 + this.radius, width - 10 - this.radius), random(10 + this.radius, height - 60 - this.radius));
 	this.maxSpeed = 3;    // Maximum speed
 	this.maxForce = 0.05; // Maximum steering force
+
+  this.run = function(boids) {
+		this.flock(boids);
+		this.update();
+		this.checkEdges();
+		this.render();
+	}
 
 	this.render = function() {
 		push();
@@ -14,12 +21,11 @@ function Boid() {
 		fill(100, 150, 0);
 		ellipse(this.loc.x, this.loc.y, this.radius, this.radius);
 		pop();
-
 	}
 
-	this.update = function(force) {
-		this.force = force;
-		this.force2 = force;
+	this.update = function() {
+		//this.force = force;
+	//	this.force2 = force;
 
 		this.fear = random(100, 200);
 		this.force = p5.Vector.sub(this.loc,r1.loc);
@@ -52,6 +58,10 @@ function Boid() {
 				this.vel.limit(1);
 			}
 		}
+
+  //  console.log(boids[0].acc);
+		this.vel.add(this.acc);
+		this.vel.limit(this.maxSpeed);
 		this.loc.add(this.vel);
 		this.acc.mult(0);
 		//bounce off walls
@@ -61,7 +71,23 @@ function Boid() {
 		}
 	}
 
-	Boid.prototype.flock = function(boids) {
+	// A method that calculates and applies a steering force towards a target
+// STEER = DESIRED MINUS VELOCITY
+this.seek = function(target) {
+  var desired = p5.Vector.sub(target, this.position); // A vector pointing from the location to the target
+  // Normalize desired and scale to maximum speed
+  desired.normalize();
+  desired.mult(this.maxSpeed);
+  // Steering = Desired minus Velocity
+  var steer = p5.Vector.sub(desired, this.vel);
+  steer.limit(this.maxForce); // Limit to maximum steering force
+
+//	console.log(steer);
+
+  return steer;
+}
+
+	this.flock = function(boids) {
 		var sep = this.separate(boids); // Separation
 		var ali = this.align(boids);    // Alignment
 		var coh = this.cohesion(boids); // Cohesion
@@ -70,6 +96,8 @@ function Boid() {
 		sep.mult(s);
 		ali.mult(a);
 		coh.mult(c);
+
+	//	console.log(sep);
 		// Add the force vectors to acceleration
 		this.applyForce(sep);
 		this.applyForce(ali);
@@ -85,6 +113,7 @@ function Boid() {
 		// For every boid in the system, check if it's too close
 		for (var i = 0; i < boids.length; i++) {
 			var d = p5.Vector.dist(this.loc, boids[i].loc);
+		//	console.log(d);
 			// If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
 			if ((d > 0) && (d < desiredseparation)) {
 				// Calculate vector pointing away from neighbor
@@ -95,6 +124,7 @@ function Boid() {
 				count++; // Keep track of how many
 			}
 		}
+
 		// Average -- divide by how many
 		if (count > 0) {
 			steer.div(count);
@@ -104,15 +134,17 @@ function Boid() {
 		if (steer.mag() > 0) {
 			// Implement Reynolds: Steering = Desired - Velocity
 			steer.normalize();
-			steer.mult(this.maxspeed);
-			steer.sub(this.velocity);
-			steer.limit(this.maxforce);
+			steer.mult(this.maxSpeed);
+		//	console.log(steer);
+
+			steer.sub(this.vel);
+			steer.limit(this.maxForce);
 		}
 		return steer;
 	}
 
 	// Alignment
-	// For every nearby boid in the system, calculate the average velocity
+	// For every nearby boid in the system, calculate the average vel
 	this.align = function(boids) {
 		var neighbordist = 50;
 		var sum = createVector(0, 0);
@@ -120,20 +152,24 @@ function Boid() {
 		for (var i = 0; i < boids.length; i++) {
 			var d = p5.Vector.dist(this.loc, boids[i].loc);
 			if ((d > 0) && (d < neighbordist)) {
-				sum.add(boids[i].velocity);
+				sum.add(boids[i].vel);
 				count++;
 			}
 		}
 		if (count > 0) {
 			sum.div(count);
 			sum.normalize();
-			sum.mult(this.maxspeed);
-			var steer = p5.Vector.sub(sum, this.velocity);
-			steer.limit(this.maxforce);
+			sum.mult(this.maxSpeed);
+			var steer = p5.Vector.sub(sum, this.vel);
+			steer.limit(this.maxForce);
+		//	console.log(steer);
+
 			return steer;
+
 		} else {
 			return createVector(0, 0);
 		}
+
 	}
 
 	// Cohesion
@@ -156,5 +192,4 @@ function Boid() {
 			return createVector(0, 0);
 		}
 	}
-
 }

@@ -32,9 +32,9 @@ var s;
 var a;
 var c;
 
-s = 0.01;
-a = 0.01;
-c = 0.01;
+s = 470;
+a = 1.2;
+c = 3.55;
 
 function setup() {
 	cnv = createCanvas(windowWidth,windowHeight);
@@ -85,7 +85,7 @@ function draw() {
 	pickUp.run();
 
 	for (var i = 0; i < boids.length; i++) {
-		boids[i].run();
+		boids[i].run(boids);
 	}
 	for (var i = 0; i < attractors.length; i++) {
 		attractors[i].run();
@@ -106,6 +106,8 @@ function draw() {
 			time = millis();
 		}
 	}
+
+
 }
 
 function changeReppelrForce() {
