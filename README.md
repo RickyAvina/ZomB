@@ -1,4 +1,2 @@
 # ZomB
-2 player game.
-Turrets defend base.
-Herd balls into own base.
+A classic zombie game with horrible graphics
