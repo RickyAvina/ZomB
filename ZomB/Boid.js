@@ -2,7 +2,7 @@ function Boid(x, y) {
   this.acc = createVector(0, 0);
   this.vel = p5.Vector.random2D();
   this.loc = createVector(x, y);
-  this.radius = 20;
+  this.radius = 10;
   this.maxSpeed = 3;    // Maximum speed
   this.maxForce = 0.05; // Maximum steering force
 }
@@ -10,7 +10,7 @@ function Boid(x, y) {
 function Boid(){
   this.acc = createVector(0, 0);
   this.vel = p5.Vector.random2D();
-  this.radius = 20;
+  this.radius = 15;
   this.loc = createVector(random(150 + this.radius, width - 10 - this.radius), random(10 + this.radius, height - 60 - this.radius));
   this.maxSpeed = 3;    // Maximum speed
   this.maxForce = 0.05; // Maximum steering force
@@ -46,13 +46,29 @@ Boid.prototype.flock = function(boids) {
 
 // Method to update location
 Boid.prototype.update = function() {
-  // Update vel
+  this.repel();
   this.vel.add(this.acc);
-  // Limit speed
-  constrain(this.vel, 0.5, this.maxSpeed);
+  //this.vel.limit(this.maxSpeed);
   this.loc.add(this.vel);
-  // Reset acc to 0 each cycle
   this.acc.mult(0);
+}
+
+Boid.prototype.repel = function(){
+  var force = p5.Vector.sub(this.loc, player.loc);
+  force.normalize();
+  force.mult(-0.6);
+
+  if (this.loc.dist(player.loc) < 700){
+    this.applyForce(force);
+    this.vel.add(this.force);
+    this.vel.limit(random(2, 3));
+}
+  // } else if {
+  //     console.log("OUT OF RANGE");
+  //     this.applyForce(force*0.6);
+  //     this.vel.add(force);
+  //   //  constrain(this.vel, 0.1, random(0.1, 0.8));
+  // }
 }
 
 // A method that calculates and applies a steering force towards a target
@@ -77,12 +93,9 @@ Boid.prototype.render = function() {
   pop();
 }
 
-// Wraparound
 Boid.prototype.borders = function() {
-
   if ((this.loc.x - 154 < this.radius) || (this.loc.x + 10 > width-this.radius)) this.vel.x *= -0.9;
   if ((this.loc.y - 10 < this.radius) || (this.loc.y + 10 > height-this.radius-1)) this.vel.y*= -0.9;
-
 }
 
 // Separation

@@ -3,7 +3,7 @@ var cnv;
 var player;
 var boids = [];
 
-var s = 4.70;
+var s = 8;
 var a = 1.2;
 var c = 3.55;
 
@@ -25,18 +25,14 @@ function draw() {
 
 function loadElements(){
   player = new Attractor();
-  
-  for (var i = 0; i < 30; i++){
-    boids.push(new Boid());
-  }
+
+  for (var i = 0; i < 30; i++) boids.push(new Boid());
 }
 
 function runElements(){
   player.run();
 
-  for (var i = 0; i < boids.length; i++){
-    boids[i].run(boids);
-  }
+  for (var i = 0; i < boids.length; i++) boids[i].run(boids);
 }
 
 function drawSetting(){
