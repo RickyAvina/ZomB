@@ -3,6 +3,11 @@ var cnv;
 var player;
 var boids = [];
 
+var bullets = [];
+var time;
+var wait = 600;
+var reload = false;
+
 var s = 8;
 var a = 1.2;
 var c = 3.55;
@@ -15,12 +20,14 @@ function setup() {
   fill(200, 200, 0);
 
   loadElements();
+  time = millis();
 }
 
 function draw() {
   background(180);
   drawSetting();
   runElements();
+  checkReload();
 };
 
 function loadElements(){
@@ -31,8 +38,17 @@ function loadElements(){
 
 function runElements(){
   player.run();
-
   for (var i = 0; i < boids.length; i++) boids[i].run(boids);
+  for (var i = 0; i < bullets.length; i++) bullets[i].run();
+}
+
+function checkReload(){
+  if (reload === true){
+		if (millis() - time >= wait){
+			reload = false;
+			time = millis();
+		}
+	}
 }
 
 function drawSetting(){
@@ -55,6 +71,14 @@ function drawSetting(){
   ellipse(width/2 + 100, height - 70, 300, 100);				// base 1
   ellipse(width/2 + 100,  70, 300, 100);				// base 1
   pop();
+}
+
+function mousePressed() {
+
+	if (reload === false){
+		bullets.push(new Bullet(mouseX, mouseY, 1));
+		reload = true;
+	}
 }
 
 window.onresize = function() {
