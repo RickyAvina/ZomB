@@ -74,6 +74,5 @@ if(keyIsDown(87)){  // down
 
 if (!keyIsDown(65) && !keyIsDown(68) && !keyIsDown(83) && !keyIsDown(87)){
   this.vel.mult(0.9);
-  print("acc: " + this.acc);
 }
 }

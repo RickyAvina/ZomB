@@ -12,6 +12,8 @@ var s = 8;
 var a = 1.2;
 var c = 3.55;
 
+var walls = [];
+
 function setup() {
   cnv = createCanvas(innerWidth, innerHeight);
   var x  = (windowWidth - width) / 2;
@@ -33,7 +35,17 @@ function draw() {
 function loadElements(){
   player = new Attractor();
 
-  for (var i = 0; i < 30; i++) boids.push(new Boid());
+  for (var i = 0; i < 15; i++) boids.push(new Boid(0));
+  for (var i = 0; i < 15; i++) boids.push(new Boid(1));
+
+  walls.push([createVector(300, 100), createVector(300, 300)]);     // [topLeft, bottomRight]
+  walls.push([createVector(300, 100), createVector(500, 100)]);
+  walls.push([createVector(300, 300), createVector(500, 300)]);
+  walls.push([createVector(150, 480), createVector(500, 480)]);
+
+  walls.push([createVector(width-70, 10), createVector(width-70, 80)]);
+/// walls.push([createVector(150, 480), createVector(500, 480)]);
+//  walls.push([createVector(150, 480), createVector(500, 480)]);
 }
 
 function runElements(){
@@ -65,12 +77,12 @@ function drawSetting(){
   strokeWeight(4);
   rect(150, 10, width - 160, height - 20);
   // end border
-  push();
-  noStroke();
-  fill(122, 89, 250);
-  ellipse(width/2 + 100, height - 70, 300, 100);				// base 1
-  ellipse(width/2 + 100,  70, 300, 100);				// base 1
-  pop();
+  strokeWeight(4);
+  fill(0);
+
+  for (var i = 0; i < walls.length; i++){
+    line(walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y);
+  }
 }
 
 function mousePressed() {

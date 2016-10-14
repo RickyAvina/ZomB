@@ -1,19 +1,12 @@
-function Boid(x, y) {
-  this.acc = createVector(0, 0);
-  this.vel = p5.Vector.random2D();
-  this.loc = createVector(x, y);
-  this.radius = 10;
-  this.maxSpeed = 3;    // Maximum speed
-  this.maxForce = 0.05; // Maximum steering force
-}
-
-function Boid(){
+function Boid(type) {
   this.acc = createVector(0, 0);
   this.vel = p5.Vector.random2D();
   this.radius = 15;
   this.loc = createVector(random(150 + this.radius, width - 10 - this.radius), random(10 + this.radius, height - 60 - this.radius));
   this.maxSpeed = 3;    // Maximum speed
   this.maxForce = 0.05; // Maximum steering force
+  this.type = type;
+  console.log("Type: " + this.type);
 }
 
 Boid.prototype.run = function(boids) {
@@ -63,12 +56,7 @@ Boid.prototype.repel = function(){
     this.vel.add(this.force);
     this.vel.limit(random(2, 3));
 }
-  // } else if {
-  //     console.log("OUT OF RANGE");
-  //     this.applyForce(force*0.6);
-  //     this.vel.add(force);
-  //   //  constrain(this.vel, 0.1, random(0.1, 0.8));
-  // }
+
 }
 
 // A method that calculates and applies a steering force towards a target
@@ -88,7 +76,14 @@ Boid.prototype.seek = function(target) {
 Boid.prototype.render = function() {
   push();
   noStroke();
-  fill(100, 150, 0);
+
+  if (this.type === 1){
+  fill(255, 0, 0);
+} else if (this.type === 2) {
+  fill(0, 0, 255);
+} else {
+  fill(0);
+}
   ellipse(this.loc.x, this.loc.y, this.radius*2, this.radius*2);
   pop();
 }
