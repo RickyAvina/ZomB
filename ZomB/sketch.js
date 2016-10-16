@@ -35,8 +35,8 @@ function draw() {
 function loadElements(){
   player = new Attractor();
 
-  for (var i = 0; i < 15; i++) boids.push(new Boid(0));
-  for (var i = 0; i < 15; i++) boids.push(new Boid(1));
+  for (var i = 0; i < 1; i++) boids.push(new Boid(0));
+//  for (var i = 0; i < 15; i++) boids.push(new Boid(1));
 
   walls.push([createVector(300, 100), createVector(300, 300)]);     // top left wall
   walls.push([createVector(300, 100), createVector(500, 100)]);
@@ -46,7 +46,7 @@ function loadElements(){
   walls.push([createVector(750, 300), createVector(950, 300)]); 	// middle container
   walls.push([createVector(750, 300), createVector(750, 450)]);
   walls.push([createVector(950, 300), createVector(950, 450)]);
-  
+
   walls.push([createVector(1200, 10), createVector(1200, 300)]);	// right wall
   walls.push([createVector(1200, 500), createVector(1200, height-10)]);
 }
@@ -67,6 +67,7 @@ function checkReload(){
 }
 
 function drawSetting(){
+
   // border
   push();
   noStroke();
@@ -80,17 +81,17 @@ function drawSetting(){
   strokeWeight(4);
   rect(150, 10, width - 160, height - 20);
   // end border
-  fill(40, 180, 200);
- // noStroke();
-  rect(150, 480, 100, 80);
-  
+
   strokeWeight(4);
   fill(0);
 
   for (var i = 0; i < walls.length; i++){
     line(walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y);
   }
-  
+
+  fill(40, 180, 200);
+  strokeWeight(0);
+  rect(152, 694, 200, 180);
 }
 
 function mousePressed() {
