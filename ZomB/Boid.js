@@ -6,7 +6,6 @@ function Boid(type) {
   this.maxSpeed = 3;    // Maximum speed
   this.maxForce = 0.05; // Maximum steering force
   this.type = type;
-  console.log("Type: " + this.type);
 }
 
 Boid.prototype.run = function(boids) {
@@ -55,7 +54,7 @@ Boid.prototype.repel = function(){
     this.applyForce(force);
     this.vel.add(this.force);
     this.vel.limit(random(2, 3));
-}
+  }
 
 }
 
@@ -78,12 +77,12 @@ Boid.prototype.render = function() {
   noStroke();
 
   if (this.type === 1){
-  fill(255, 0, 0);
-} else if (this.type === 2) {
-  fill(0, 0, 255);
-} else {
-  fill(0);
-}
+    fill(255, 0, 0);
+  } else if (this.type === 2) {
+    fill(0, 0, 255);
+  } else {
+    fill(0);
+  }
   ellipse(this.loc.x, this.loc.y, this.radius*2, this.radius*2);
   pop();
 }
@@ -91,6 +90,14 @@ Boid.prototype.render = function() {
 Boid.prototype.borders = function() {
   if ((this.loc.x - 154 < this.radius) || (this.loc.x + 10 > width-this.radius)) this.vel.x *= -0.9;
   if ((this.loc.y - 10 < this.radius) || (this.loc.y + 10 > height-this.radius-1)) this.vel.y*= -0.9;
+
+  for (var i = 0; i < walls.length; i++){
+    var isHit = collideLineCircle(walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y, this.loc.x, this.loc.y, this.radius*2);
+
+    if (isHit==true){
+      this.vel.mult(-0.9);
+    }
+  }
 }
 
 // Separation
