@@ -13,6 +13,7 @@ function Attractor() {
 Attractor.prototype.run = function() {
   this.update(this.force);// default = (0,0)
   this.checkEdges();
+  this.getInput();
   this.render();
 }
 
@@ -30,7 +31,6 @@ Attractor.prototype.render = function() {
 }
 
 Attractor.prototype.update = function(force) {
-  this.getInput();
   this.vel.add(this.acc);
   this.vel.limit(10);
   this.loc.add(this.vel);
@@ -45,51 +45,93 @@ Attractor.prototype.checkEdges = function() {
 }
 
 Attractor.prototype.getInput = function(read){
+  var lefts = [];
+  var rights = [];
+  var ups = [];
+  var downs = [];
+
   for (var i = 0; i < walls.length; i++){
-     this.isHit = collideLineCircle(walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y, this.loc.x, this.loc.y, this.rad);
+    lefts.push(collidePointLine(this.loc.x-this.rad/2, this.loc.y, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
+    rights.push(collidePointLine(this.loc.x+this.rad/2, this.loc.y, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
+    ups.push(collidePointLine(this.loc.x, this.loc.y-this.rad/2, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
+    downs.push(collidePointLine(this.loc.x, this.loc.y+this.rad/2, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
+  }
 
-    if (this.isHit==true){
-    //  this.vel.mult(-0.9);
-    console.log("YEET");
-      if (this.vel.x < 0) this.keys[0] = true;    // left
-      if (this.vel.x > 0) this.keys[1] = true;    // right
-      if (this.vel.y < 0) this.keys[2] = true;    // up
-      if (this.vel.y > 0) this.keys[3] = true;    // down
-
+  for (var i = 0; i < lefts.length; i++) {
+    if (lefts[i] == true){
+      this.keys[0] = true;
+      break;
     } else {
-    //  for (var j = 0; j < this.keys.length; j++) this.keys[i] = false;
+      this.keys[0] = false;
     }
   }
 
-  //console.log("this.isHit = " + this.isHit);
+  for (var i = 0; i < rights.length; i++) {
+    if (rights[i] == true){
+      this.keys[1] = true;
+      break;
+    } else {
+      this.keys[1] = false;
+    }
+  }
 
-  if(keyIsDown(65) && this.keys[0] == false){ // left
-    if ((keyIsDown(83) && this.keys[3]) || (keyIsDown(87) && this.keys[2] == false)){
-      this.vel.mult(0.85);
-      this.applyForce(createVector(-1.9,0));
+  for (var i = 0; i < ups.length; i++) {
+    if (ups[i] == true){
+      this.keys[2] = true;
+      break;
+    } else {
+      this.keys[2] = false;
+    }
+  }
+
+  for (var i = 0; i < downs.length; i++) {
+    if (downs[i] == true){
+      this.keys[3] = true;
+      break;
+    } else {
+      this.keys[3] = false;
+    }
+  }
+
+  if (this.keys[1] == true) console.log("hitRight");
+  if (this.keys[0] == true) console.log("hitLeft");
+  if (this.keys[2] == true) console.log("hitUp");
+  if (this.keys[3] == true) console.log("hitBottom");
+
+  if (keyIsDown(65)){  // left
+    if (this.keys[0]==true){
+      this.vel.mult(0);
     } else {
       this.vel.mult(0.7);
       this.applyForce(createVector(-1.9,0));
     }
   }
 
-  if(keyIsDown(68) && this.keys[1] == false){ // right
-    if ((keyIsDown(83) && this.keys[3]) || (keyIsDown(87) && this.keys[2] == false)){
-      this.vel.mult(0.8);
-      this.applyForce(createVector(1.9,0));
+  if (keyIsDown(68)){  // right
+    if (this.keys[1]==true){
+      this.vel.mult(0);
     } else {
       this.vel.mult(0.7);
       this.applyForce(createVector(1.9,0));
     }
   }
 
-  if(keyIsDown(83)){ // up
-    this.vel.mult(0.7);
-    this.applyForce(createVector(0,1.9));
+  if (keyIsDown(87)){  // up
+    if (this.keys[2]==true){
+      this.vel.mult(0);
+    } else {
+      this.vel.mult(0.7);
+      this.applyForce(createVector(0, -1.9));
+    }
   }
-  if(keyIsDown(87)){  // down
-    this.vel.mult(0.7);
-    this.applyForce(createVector(0,-1.9));
+
+  if (keyIsDown(83)){  // down
+    if (this.keys[3]==true){
+      this.vel.mult(0);
+    } else {
+      this.vel.mult(0.7);
+      this.applyForce(createVector(0, 1.9));
+    }
   }
 
   if (!keyIsDown(65) && !keyIsDown(68) && !keyIsDown(83) && !keyIsDown(87)){
