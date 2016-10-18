@@ -3,6 +3,8 @@ var cnv;
 var player;
 var boids = [];
 
+var attractors = [];
+
 var bullets = [];
 var time;
 var wait = 600;
@@ -33,10 +35,12 @@ function draw() {
 };
 
 function loadElements(){
-  player = new Attractor();
+  player = new Attractor(width/2, height/2, false);
 
-  for (var i = 0; i < 1; i++) boids.push(new Boid(0));
-//  for (var i = 0; i < 15; i++) boids.push(new Boid(1));
+  loadAtrractors();
+  loadBoids();
+  // for (var i = 0; i < 1; i++) boids.push(new Boid(0));
+  // for (var i = 0; i < 15; i++) boids.push(new Boid(1));
 
   walls.push([createVector(300, 100), createVector(300, 300)]);     // top left wall
   walls.push([createVector(300, 100), createVector(500, 100)]);
@@ -51,10 +55,30 @@ function loadElements(){
   walls.push([createVector(1200, 500), createVector(1200, height-10)]);
 }
 
+function loadBoids(){
+  for (var i = 0; i < attractors.length; i++){
+    boids.push(new Boid(attractors[i].loc.x, attractors[i].loc.y, true));
+  }
+
+  for (var i = 0; i < 20; i++){
+    boids.push(new Boid(random(150 + 15, width - 10 - 15), random(10 + 15, height - 60 - 15), false));
+  }
+  //boids.push(new Boid(170, 50, 0));
+}
+
+function loadAtrractors(){
+  attractors.push(new Attractor(190, 190, true));
+  attractors.push(new Attractor(380, 190, true));
+  attractors.push(new Attractor(850, 400, true));
+  attractors.push(new Attractor(1275, 50, true));
+  attractors.push(new Attractor(1275, height-50, true));
+}
+
 function runElements(){
   player.run();
   for (var i = 0; i < boids.length; i++) boids[i].run(boids);
   for (var i = 0; i < bullets.length; i++) bullets[i].run();
+  for (var i = 0; i < attractors.length; i++) attractors[i].run();
 }
 
 function checkReload(){
@@ -81,13 +105,10 @@ function drawSetting(){
   strokeWeight(4);
   rect(150, 10, width - 160, height - 20);
   // end border
-
   strokeWeight(4);
   fill(0);
 
-  for (var i = 0; i < walls.length; i++){
-    line(walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y);
-  }
+  for (var i = 0; i < walls.length; i++) line(walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y);
 
   fill(40, 180, 200);
   strokeWeight(0);

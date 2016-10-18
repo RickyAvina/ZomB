@@ -1,10 +1,15 @@
-function Attractor() {
+function Attractor(x, y, isSpecial) {
   this.force = createVector(random(.03), random(.03));
+  this.special = isSpecial;
   this.rad  = 30;
   this.acc = createVector(0,0);
   this.vel = createVector(0,0);
-  this.loc = createVector(random(150 + this.radius, width - 10 - this.radius), random(10 + this.radius, height - 60 - this.radius));
-  this.color = color(255);
+  this.loc = createVector(x,y);
+  if (isSpecial === true){
+    this.color = color(200, 40, 255);
+  } else {
+    this.color = color(255, 0, 0);
+  }
   this.maxSpeed = 2;
   this.keys = [false, false, false, false];      // left, right, up, down
   this.isHit = false;
@@ -13,7 +18,8 @@ function Attractor() {
 Attractor.prototype.run = function() {
   this.update(this.force);// default = (0,0)
   this.checkEdges();
-  this.getInput();
+
+  if (this.special == false) this.getInput();
   this.render();
 }
 
@@ -92,11 +98,6 @@ Attractor.prototype.getInput = function(read){
       this.keys[3] = false;
     }
   }
-
-  if (this.keys[1] == true) console.log("hitRight");
-  if (this.keys[0] == true) console.log("hitLeft");
-  if (this.keys[2] == true) console.log("hitUp");
-  if (this.keys[3] == true) console.log("hitBottom");
 
   if (keyIsDown(65)){  // left
     if (this.keys[0]==true){
