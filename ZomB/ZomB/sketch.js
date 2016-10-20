@@ -98,7 +98,7 @@ function checkReload(){
 function checkBoidFree(){
   for (var i = boids.length-1; i >= 0; i--){
     if (boids[i].loc.x-boids[i].radius > 152 && boids[i].loc.x+boids[i].radius<352 && boids[i].loc.y+ boids[i].radius > 694 && boids[i].loc.y - boids[i].radius < 874){
-      boids.splice(i, 1);
+      if (boids[i].type == true) boids.splice(i, 1);
     }
   }
 }
