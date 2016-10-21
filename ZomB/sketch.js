@@ -3,6 +3,8 @@ var cnv;
 var player;
 var boids = [];
 
+var survivors = 5;
+
 var attractors = [];
 
 var bullets = [];
@@ -16,13 +18,16 @@ var c = 3.55;
 
 var walls = [];
 
+var score;
+var health = 255;
+
 function setup() {
   cnv = createCanvas(innerWidth, innerHeight);
   var x  = (windowWidth - width) / 2;
   var y = (windowHeight - height) / 2;
   cnv.position(x, y);
   fill(200, 200, 0);
-
+  score = 0;
   loadElements();
   time = millis();
 }
@@ -30,17 +35,34 @@ function setup() {
 function draw() {
   background(180);
   drawSetting();
+  drawMenuItems();
   runElements();
   checkReload();
-};
+}
+
+function drawMenuItems(){
+  fill(0);
+  noStroke();
+  rect(150, height-10, width-158, 10);
+  fill(255-health, health, 0);
+  strokeWeight(2);
+  stroke(0);
+  health = constrain(health, 0.5, 255);
+  rect(150, height-10, (255/width-7.03) * health, 10);
+
+  //  noStroke();
+  fill(255, 255, 255);
+  textSize(32);
+  text("Survivors", 10, 30);
+  for (var i = 0; i < survivors; i++) rect(40, i * 40 + 60, 70, 30);
+
+}
 
 function loadElements(){
   player = new Attractor(width/2, height/2, false);
 
   loadAtrractors();
   loadBoids();
-  // for (var i = 0; i < 1; i++) boids.push(new Boid(0));
-  // for (var i = 0; i < 15; i++) boids.push(new Boid(1));
 
   walls.push([createVector(300, 100), createVector(300, 300)]);     // top left wall
   walls.push([createVector(300, 100), createVector(500, 100)]);
@@ -57,13 +79,14 @@ function loadElements(){
 
 function loadBoids(){
   for (var i = 0; i < attractors.length; i++){
-    boids.push(new Boid(attractors[i].loc.x, attractors[i].loc.y, true));
+    boids.push(new Boid(attractors[i].loc.x + random(-10, 10), attractors[i].loc.y + random(-10, 10), true));
   }
+
+  survivors = boids.length;
 
   for (var i = 0; i < 20; i++){
     boids.push(new Boid(random(150 + 15, width - 10 - 15), random(10 + 15, height - 60 - 15), false));
   }
-  //boids.push(new Boid(170, 50, 0));
 }
 
 function loadAtrractors(){
@@ -76,18 +99,31 @@ function loadAtrractors(){
 
 function runElements(){
   player.run();
-  for (var i = 0; i < boids.length; i++) boids[i].run(boids);
   for (var i = 0; i < bullets.length; i++) bullets[i].run();
   for (var i = 0; i < attractors.length; i++) attractors[i].run();
+  for (var i = 0; i < boids.length; i++) boids[i].run(boids);
+  checkBoidFree();
 }
 
 function checkReload(){
   if (reload === true){
-		if (millis() - time >= wait){
-			reload = false;
-			time = millis();
-		}
-	}
+    if (millis() - time >= wait){
+      reload = false;
+      time = millis();
+    }
+  }
+}
+
+function checkBoidFree(){
+  for (var i = boids.length-1; i >= 0; i--){
+    if (boids[i].loc.x-boids[i].radius > 152 && boids[i].loc.x+boids[i].radius<352 && boids[i].loc.y+ boids[i].radius > 694 && boids[i].loc.y - boids[i].radius < 874){
+      if (boids[i].type == true){
+        survivors--;
+        boids.splice(i, 1);
+        score++;
+      }
+    }
+  }
 }
 
 function drawSetting(){
@@ -95,7 +131,7 @@ function drawSetting(){
   // border
   push();
   noStroke();
-  fill(255, 51, 51);
+  fill(0);
   rect(0, height - 60, width, 70);
   rect(0, 0, width, 10);
   rect(width - 10, 0, 10, height);
@@ -113,14 +149,15 @@ function drawSetting(){
   fill(40, 180, 200);
   strokeWeight(0);
   rect(152, 694, 200, 180);
+  //health--;
 }
 
 function mousePressed() {
 
-	if (reload === false){
-		bullets.push(new Bullet(mouseX, mouseY, 1));
-		reload = true;
-	}
+  if (reload === false){
+    bullets.push(new Bullet(mouseX, mouseY, 1));
+    reload = true;
+  }
 }
 
 window.onresize = function() {

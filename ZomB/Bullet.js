@@ -53,9 +53,11 @@ Bullet.prototype.update = function(force) {
   this.death();
 }
 
+
 Bullet.prototype.death = function(){
   for (var i = boids.length-1; i >= 0; i--){
     if(this.loc.dist(boids[i].loc) <= 10 + this.rad/2){
+      if (boids[i].type == false)
       boids.splice(i, 1);
     }
   }

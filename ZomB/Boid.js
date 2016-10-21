@@ -1,5 +1,4 @@
 function Boid(x, y, type) {
-  console.log("type: " + type);
   this.acc = createVector(0, 0);
   this.vel = p5.Vector.random2D();
   this.radius = 15;
@@ -43,23 +42,52 @@ Boid.prototype.flock = function(boids) {
 Boid.prototype.update = function() {
   this.repel();
   this.vel.add(this.acc);
-  //this.vel.limit(this.maxSpeed);
   this.loc.add(this.vel);
   this.acc.mult(0);
 }
 
 Boid.prototype.repel = function(){
-  var force = p5.Vector.sub(this.loc, player.loc);
-  force.normalize();
 
-  force.mult(-0.6);
+  if (this.type == true){
+    for (var i = 0; i < attractors.length; i++){
+      var force = p5.Vector.sub(this.loc, attractors[i].loc);
+      force.normalize();
 
-  if (this.loc.dist(player.loc) < 700){
-    this.applyForce(force);
-    this.vel.add(this.force);
-    this.vel.limit(random(2, 3));
+      force.mult(-0.1);
+
+      if (this.loc.dist(attractors[i].loc) < 60){
+        this.applyForce(force);
+        this.vel.add(this.force);
+        this.vel.limit(random(2, 3));
+      }
+    }
+
+    if (this.loc.dist(player.loc) < 80){
+      var forcey = p5.Vector.sub(this.loc, player.loc);
+      forcey.normalize();
+
+      forcey.mult(-0.6);
+      this.applyForce(forcey);
+      this.vel.add(this.forcey);
+      this.vel.limit(random(5, 6));
+    }
+  } else {
+
+    var forcey = p5.Vector.sub(this.loc, player.loc);
+    forcey.normalize();
+
+    forcey.mult(-0.6);
+
+    if (this.loc.dist(player.loc) < 700){
+      this.applyForce(forcey);
+      this.vel.add(this.forcey);
+      this.vel.limit(random(2, 3));
+
+      if (this.loc.dist(player.loc) < this.radius+player.rad/2){
+        health--;
+      }
+    }
   }
-
 }
 
 // A method that calculates and applies a steering force towards a target
@@ -92,8 +120,9 @@ Boid.prototype.render = function() {
 }
 
 Boid.prototype.borders = function() {
-  if ((this.loc.x - 154 < this.radius) || (this.loc.x + 10 > width-this.radius)) this.vel.x *= -0.9;
-  if ((this.loc.y - 10 < this.radius) || (this.loc.y + 10 > height-this.radius-1)) this.vel.y*= -0.9;
+  // constrain(this.loc.x, 154+this.radius, width-10-this.radius);
+   if ((this.loc.x - 154 < this.radius) || (this.loc.x + 10 > width-this.radius)) this.vel.x *= -0.9;
+   if ((this.loc.y - 10 < this.radius) || (this.loc.y + 10 > height-this.radius-1)) this.vel.y*= -0.9;
 
   for (var i = 0; i < walls.length; i++){
     var isHit = collideLineCircle(walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y, this.loc.x, this.loc.y, this.radius*2);

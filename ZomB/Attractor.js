@@ -8,7 +8,7 @@ function Attractor(x, y, isSpecial) {
   if (isSpecial === true){
     this.color = color(200, 40, 255);
   } else {
-    this.color = color(255, 0, 0);
+    this.color = color(20, 240, 220);
   }
   this.maxSpeed = 2;
   this.keys = [false, false, false, false];      // left, right, up, down
@@ -19,8 +19,9 @@ Attractor.prototype.run = function() {
   this.update(this.force);// default = (0,0)
   this.checkEdges();
 
-  if (this.special == false) this.getInput();
-  this.render();
+  if (this.special == false)
+     this.getInput();
+  if (this.special == false) this.render();
 }
 
 Attractor.prototype.applyForce = function (f) {
@@ -29,7 +30,7 @@ Attractor.prototype.applyForce = function (f) {
 
 Attractor.prototype.render = function() {
   push();
-  strokeWeight(4);
+  strokeWeight(0);
   fill(this.color);
   stroke(20);
   ellipse(this.loc.x, this.loc.y, this.rad, this.rad);
