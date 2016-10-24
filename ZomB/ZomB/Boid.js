@@ -1,5 +1,4 @@
 function Boid(x, y, type) {
-  console.log("type: " + type);
   this.acc = createVector(0, 0);
   this.vel = p5.Vector.random2D();
   this.radius = 15;
@@ -8,6 +7,7 @@ function Boid(x, y, type) {
 
   this.maxSpeed = 3;    // Maximum speed
   this.maxForce = 0.05; // Maximum steering force
+  this.health = 255;
   this.type = type;
 }
 
@@ -83,6 +83,10 @@ Boid.prototype.repel = function(){
       this.applyForce(forcey);
       this.vel.add(this.forcey);
       this.vel.limit(random(2, 3));
+
+      if (this.loc.dist(player.loc) < this.radius+player.rad/2){
+        health--;
+      }
     }
   }
 }
@@ -113,6 +117,13 @@ Boid.prototype.render = function() {
     fill(0);
   }
   ellipse(this.loc.x, this.loc.y, this.radius*2, this.radius*2);
+
+  fill(0);
+  strokeWeight(2);
+  stroke(255);
+  rect(this.loc.x - 40, this.loc.y - 40, 80, 15);
+  fill(255-this.health, this.health, 0);
+  rect(this.loc.x - 40, this.loc.y - 40, 80, 15);
   pop();
 }
 
