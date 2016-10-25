@@ -9,6 +9,10 @@ function Boid(x, y, type) {
   this.maxForce = 0.05; // Maximum steering force
   this.health = 255;
   this.type = type;
+
+  if (type == false){
+    this.c = [240, 100, 50];
+  }
 }
 
 Boid.prototype.run = function(boids) {
@@ -45,6 +49,10 @@ Boid.prototype.update = function() {
   this.vel.add(this.acc);
   this.loc.add(this.vel);
   this.acc.mult(0);
+
+  if (this.type == true) this.health*=0.9992;
+  if (this.type == false) this.health+= 0.2;
+  constrain(this.health, 0, 255);
 }
 
 Boid.prototype.repel = function(){
@@ -110,35 +118,38 @@ Boid.prototype.render = function() {
   noStroke();
 
   if (this.type === false){
-    fill(255, 0, 0);
+    fill(this.c[0], this.c[1], this.c[2]);
+    ellipse(this.loc.x, this.loc.y, this.radius*2, this.radius*2);
+
   } else if (this.type === true) {
     fill(0, 0, 255);
+    ellipse(this.loc.x, this.loc.y, this.radius*2, this.radius*2);
+
+    fill(0);
+    strokeWeight(2);
+    stroke(255);
+    rect(this.loc.x - 40, this.loc.y - 40, 80, 15);
+    fill(255-this.health, this.health, 0);
+    rect(this.loc.x - 40, this.loc.y - 40, this.health * (80/255), 15);
   } else {
     fill(0);
-  }
-  ellipse(this.loc.x, this.loc.y, this.radius*2, this.radius*2);
+    ellipse(this.loc.x, this.loc.y, this.radius*2, this.radius*2);
 
-  fill(0);
-  strokeWeight(2);
-  stroke(255);
-  rect(this.loc.x - 40, this.loc.y - 40, 80, 15);
-  fill(255-this.health, this.health, 0);
-  rect(this.loc.x - 40, this.loc.y - 40, 80, 15);
+  }
   pop();
 }
 
 Boid.prototype.borders = function() {
-  // constrain(this.loc.x, 154+this.radius, width-10-this.radius);
-   if ((this.loc.x - 154 < this.radius) || (this.loc.x + 10 > width-this.radius)) this.vel.x *= -0.9;
-   if ((this.loc.y - 10 < this.radius) || (this.loc.y + 10 > height-this.radius-1)) this.vel.y*= -0.9;
+  if ((this.loc.x - 154 < this.radius) || (this.loc.x + 10 > width-this.radius)) this.vel.x *= -0.9;
+  if ((this.loc.y - 10 < this.radius) || (this.loc.y + 10 > height-this.radius-1)) this.vel.y*= -0.9;
 
-  for (var i = 0; i < walls.length; i++){
-    var isHit = collideLineCircle(walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y, this.loc.x, this.loc.y, this.radius*2);
+ for (var i = 0; i < walls.length; i++){
+   var isHit = collideLineCircle(walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y, this.loc.x, this.loc.y, this.radius*2);
 
-    if (isHit==true){
-      this.vel.mult(-0.9);
-    }
-  }
+   if (isHit==true){
+     this.vel.mult(-0.9);
+   }
+ }
 }
 
 // Separation
@@ -147,7 +158,7 @@ Boid.prototype.separate = function(boids) {
   var desiredseparation = 55.0;
   var steer = createVector(0, 0);
   var count = 0;
-  // For every boid in the system, check if it's too close
+  // For every boid in the system, checdak if it's too close
   for (var i = 0; i < boids.length; i++) {
     var d = p5.Vector.dist(this.loc, boids[i].loc);
     // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)

@@ -45,10 +45,11 @@ Attractor.prototype.update = function(force) {
 }
 
 Attractor.prototype.checkEdges = function() {
-  if (this.loc.x > width - this.rad) this.loc.x = 150 + this.rad/2;
-  if (this.loc.x < 150 + this.rad/2) this.loc.x = width - this.rad/2 - 10;
-  if (this.loc.y > height - this.rad) this.loc.y = this.rad;
-  if (this.loc.y <  this.rad) this.loc.y = height - this.rad;
+
+   if (this.loc.x > width - this.rad + 2) this.loc.x = width-this.rad + 2;
+   if (this.loc.x < 138 + this.rad) this.loc.x = 138 + this.rad;
+   if (this.loc.y > height - this.rad + 2) this.loc.y = height - this.rad + 2;
+   if (this.loc.y < this.rad - 2) this.loc.y = this.rad - 2;
 }
 
 Attractor.prototype.getInput = function(read){
@@ -58,10 +59,10 @@ Attractor.prototype.getInput = function(read){
   var downs = [];
 
   for (var i = 0; i < walls.length; i++){
-    lefts.push(collidePointLine(this.loc.x-this.rad/2, this.loc.y, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
-    rights.push(collidePointLine(this.loc.x+this.rad/2, this.loc.y, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
-    ups.push(collidePointLine(this.loc.x, this.loc.y-this.rad/2, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
-    downs.push(collidePointLine(this.loc.x, this.loc.y+this.rad/2, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
+    lefts.push(collidePointLine(this.loc.x-this.rad/2+2, this.loc.y, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
+    rights.push(collidePointLine(this.loc.x+this.rad/2-2, this.loc.y, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
+    ups.push(collidePointLine(this.loc.x, this.loc.y-this.rad/2-2, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
+    downs.push(collidePointLine(this.loc.x, this.loc.y+this.rad/2+2, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
   }
 
   for (var i = 0; i < lefts.length; i++) {
