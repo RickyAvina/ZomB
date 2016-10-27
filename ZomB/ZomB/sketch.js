@@ -30,9 +30,12 @@ var a = 1.2;
 var c = 3.55;
 
 var walls = [];
+var repellers = [];
 
 var score;
 var health = 255;
+
+var repeller;
 
 function setup() {
   cnv = createCanvas(innerWidth, innerHeight);
@@ -43,6 +46,7 @@ function setup() {
   score = 0;
   loadElements();
   time = millis();
+  repeller  = new Repeller(width/2, height/2);
 }
 
 function draw() {
@@ -51,6 +55,52 @@ function draw() {
   drawMenuItems();
   runElements();
   checkReload();
+  //  endGame();
+  //  noLoop();
+
+  repeller.run();
+
+}
+
+function endGame(){
+  console.log("AYY");
+  fill(40, 50, 80);
+  rect(0,0,width, height);
+
+  // readSingleFile("file:///H://score.json");
+  //httpGet("H:\\score.txt", Object, "text");
+  loadJSON("file:///H://score.json");
+
+  var sendableScore = [];
+  sendableScore.push({
+    player: "Henry",
+    score: 4
+  });
+
+  save(sendableScore, "score.txt");
+  console.log(sendableScore[0].score);
+
+
+
+  //var data = loadJSON("score.json");
+
+  // data.push({
+  //   player: "Henry",
+  //   score: 4
+  // });
+
+  // var json = {
+  //   player: "Ricky".
+  //   score: 4
+  // };
+  //
+  // json.player = "ricky";
+  // json.score = boids.length;
+  //
+  // var newJSON = {
+  //
+  // }
+  // saveJSON(json, "data/score.json");
 }
 
 function drawMenuItems(){
@@ -87,6 +137,14 @@ function loadElements(){
 
   walls.push([createVector(1200, 10), createVector(1200, 300)]);	// right wall
   walls.push([createVector(1200, 500), createVector(1200, height-10)]);
+
+  for (var i = 0; i < walls.length; i++){
+    for (var j = walls[i][0].x; j <= walls[i][1].x; j+=5){
+      for (var k = walls[i][0].y; k <= walls[i][1].y; k+=5){
+      repellers.push(new Repeller(j, k));
+      }
+    }
+  }
 }
 
 function loadBoids(){
@@ -113,6 +171,7 @@ function runElements(){
   for (var i = 0; i < bullets.length; i++) bullets[i].run();
   for (var i = 0; i < boids.length; i++) boids[i].run(boids);
   for (var i = 0; i < attractors.length; i++) attractors[i].run();
+  for (var i = 0; i < repellers.length; i++) repellers[i].run();
   player.run();
   checkBoidFree();
 }
@@ -174,4 +233,22 @@ function mousePressed() {
 
 window.onresize = function() {
   cnv.size(window.innerWidth, window.innerHeight);
+}
+
+function readSingleFile(e) {
+  var file = e.target.files[0];
+  if (!file) {
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var contents = e.target.result;
+    displayContents(contents);
+  };
+  reader.readAsText(file);
+}
+
+function displayContents(contents) {
+  var element = document.getElementById('file-content');
+  element.innerHTML = contents;
 }

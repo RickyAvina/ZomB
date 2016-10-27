@@ -56,6 +56,18 @@ Boid.prototype.update = function() {
 }
 
 Boid.prototype.repel = function(){
+  for (var i = 0; i < repellers.length; i++){
+    var force = p5.Vector.sub(this.loc, repellers[i].loc);
+    force.normalize();
+
+    force.mult(2.1);
+
+    if (this.loc.dist(repellers[i].loc) < 15){
+      this.applyForce(force);
+      this.vel.add(this.force);
+      this.vel.limit(random(5, 7));
+    }
+  }
 
   if (this.type == true){
     for (var i = 0; i < attractors.length; i++){
@@ -143,13 +155,13 @@ Boid.prototype.borders = function() {
   if ((this.loc.x - 154 < this.radius) || (this.loc.x + 10 > width-this.radius)) this.vel.x *= -0.9;
   if ((this.loc.y - 10 < this.radius) || (this.loc.y + 10 > height-this.radius-1)) this.vel.y*= -0.9;
 
- for (var i = 0; i < walls.length; i++){
-   var isHit = collideLineCircle(walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y, this.loc.x, this.loc.y, this.radius*2);
-
-   if (isHit==true){
-     this.vel.mult(-0.9);
-   }
- }
+ // for (var i = 0; i < walls.length; i++){
+ //   var isHit = collideLineCircle(walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y, this.loc.x, this.loc.y, this.radius*2);
+ //
+ //   if (isHit==true){
+ //     this.vel.mult(-0.9);
+ //   }
+ // }
 }
 
 // Separation
