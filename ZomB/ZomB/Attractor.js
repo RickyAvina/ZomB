@@ -19,9 +19,11 @@ Attractor.prototype.run = function() {
   this.update(this.force);// default = (0,0)
   this.checkEdges();
 
-  if (this.special == false)
+  if (this.special == false){
      this.getInput();
-  if (this.special == false) this.render();
+     this.render();
+     this.repel();
+   }
 }
 
 Attractor.prototype.applyForce = function (f) {
@@ -39,7 +41,7 @@ Attractor.prototype.render = function() {
 
 Attractor.prototype.update = function(force) {
   this.vel.add(this.acc);
-  this.vel.limit(10);
+  this.vel.limit(7);
   this.loc.add(this.vel);
   this.acc.mult(0);
 }
@@ -53,91 +55,28 @@ Attractor.prototype.checkEdges = function() {
 }
 
 Attractor.prototype.getInput = function(read){
-  var lefts = [];
-  var rights = [];
-  var ups = [];
-  var downs = [];
+  var easing = 0.8;
 
-  for (var i = 0; i < walls.length; i++){
-    lefts.push(collidePointLine(this.loc.x-this.rad/2+2, this.loc.y, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
-    rights.push(collidePointLine(this.loc.x+this.rad/2-2, this.loc.y, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
-    ups.push(collidePointLine(this.loc.x, this.loc.y-this.rad/2-2, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
-    downs.push(collidePointLine(this.loc.x, this.loc.y+this.rad/2+2, walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y));
-  }
+  var targetX = mouseX;
+  var dx = targetX - this.loc.x;
 
-  for (var i = 0; i < lefts.length; i++) {
-    if (lefts[i] == true){
-      this.keys[0] = true;
-      break;
-    } else {
-      this.keys[0] = false;
+  var targetY = mouseY;
+  var dy = targetY - this.loc.y;
+
+  this.applyForce(createVector(easing*dx, easing*dy));
+}
+
+Attractor.prototype.repel = function(){
+  for (var i = 0; i < repellers.length; i++){
+    var force = p5.Vector.sub(this.loc, repellers[i].loc);
+    force.normalize();
+
+    force.mult(200);
+
+    if (this.loc.dist(repellers[i].loc) < 20){
+      this.applyForce(force);
+      this.vel.add(this.force);
+      this.vel.limit(700);
     }
-  }
-
-  for (var i = 0; i < rights.length; i++) {
-    if (rights[i] == true){
-      this.keys[1] = true;
-      break;
-    } else {
-      this.keys[1] = false;
-    }
-  }
-
-  for (var i = 0; i < ups.length; i++) {
-    if (ups[i] == true){
-      this.keys[2] = true;
-      break;
-    } else {
-      this.keys[2] = false;
-    }
-  }
-
-  for (var i = 0; i < downs.length; i++) {
-    if (downs[i] == true){
-      this.keys[3] = true;
-      break;
-    } else {
-      this.keys[3] = false;
-    }
-  }
-
-  if (keyIsDown(65)){  // left
-    if (this.keys[0]==true){
-      this.vel.mult(0);
-    } else {
-      this.vel.mult(0.7);
-      this.applyForce(createVector(-1.9,0));
-    }
-  }
-
-  if (keyIsDown(68)){  // right
-    if (this.keys[1]==true){
-      this.vel.mult(0);
-    } else {
-      this.vel.mult(0.7);
-      this.applyForce(createVector(1.9,0));
-    }
-  }
-
-  if (keyIsDown(87)){  // up
-    if (this.keys[2]==true){
-      this.vel.mult(0);
-    } else {
-      this.vel.mult(0.7);
-      this.applyForce(createVector(0, -1.9));
-    }
-  }
-
-  if (keyIsDown(83)){  // down
-    if (this.keys[3]==true){
-      this.vel.mult(0);
-    } else {
-      this.vel.mult(0.7);
-      this.applyForce(createVector(0, 1.9));
-    }
-  }
-
-  if (!keyIsDown(65) && !keyIsDown(68) && !keyIsDown(83) && !keyIsDown(87)){
-    this.vel.mult(0.9);
   }
 }

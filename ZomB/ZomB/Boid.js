@@ -50,9 +50,12 @@ Boid.prototype.update = function() {
   this.loc.add(this.vel);
   this.acc.mult(0);
 
-  if (this.type == true) this.health*=0.9992;
+  if (this.type == true)
+     this.health-=0.08;
+
   if (this.type == false) this.health+= 0.2;
   constrain(this.health, 0, 255);
+
 }
 
 Boid.prototype.repel = function(){
@@ -62,7 +65,7 @@ Boid.prototype.repel = function(){
 
     force.mult(2.1);
 
-    if (this.loc.dist(repellers[i].loc) < 15){
+    if (this.loc.dist(repellers[i].loc) < 20){
       this.applyForce(force);
       this.vel.add(this.force);
       this.vel.limit(random(5, 7));
@@ -74,20 +77,20 @@ Boid.prototype.repel = function(){
       var force = p5.Vector.sub(this.loc, attractors[i].loc);
       force.normalize();
 
-      force.mult(-0.1);
+      force.mult(-0.5);
 
-      if (this.loc.dist(attractors[i].loc) < 60){
+      if (this.loc.dist(attractors[i].loc) < 20){
         this.applyForce(force);
         this.vel.add(this.force);
-        this.vel.limit(random(2, 3));
+        this.vel.limit(random(3, 4));
       }
     }
 
-    if (this.loc.dist(player.loc) < 80){
+    if (this.loc.dist(player.loc) < 120){
       var forcey = p5.Vector.sub(this.loc, player.loc);
       forcey.normalize();
 
-      forcey.mult(-0.6);
+      forcey.mult(-0.7);
       this.applyForce(forcey);
       this.vel.add(this.forcey);
       this.vel.limit(random(5, 6));
@@ -155,13 +158,6 @@ Boid.prototype.borders = function() {
   if ((this.loc.x - 154 < this.radius) || (this.loc.x + 10 > width-this.radius)) this.vel.x *= -0.9;
   if ((this.loc.y - 10 < this.radius) || (this.loc.y + 10 > height-this.radius-1)) this.vel.y*= -0.9;
 
- // for (var i = 0; i < walls.length; i++){
- //   var isHit = collideLineCircle(walls[i][0].x, walls[i][0].y, walls[i][1].x, walls[i][1].y, this.loc.x, this.loc.y, this.radius*2);
- //
- //   if (isHit==true){
- //     this.vel.mult(-0.9);
- //   }
- // }
 }
 
 // Separation

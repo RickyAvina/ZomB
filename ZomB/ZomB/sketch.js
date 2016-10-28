@@ -55,52 +55,33 @@ function draw() {
   drawMenuItems();
   runElements();
   checkReload();
-  //  endGame();
-  //  noLoop();
+
+  if ((survivors < 1 && score < 5) || (player.health < 1)){
+    endGame(false);
+  }
+
+  if (survivors < 1 && score >= 5){
+    endGame(true);
+  }
+
 
   repeller.run();
 
 }
 
-function endGame(){
-  console.log("AYY");
+function endGame(didWin){
+
+  if (didWin == false){
+    fill(0,0,255);
+    rect(0,0,width/2, height/2);
+    fill(255);
+    text("YOU LOSE");
+  } else {
   fill(40, 50, 80);
   rect(0,0,width, height);
-
-  // readSingleFile("file:///H://score.json");
-  //httpGet("H:\\score.txt", Object, "text");
-  loadJSON("file:///H://score.json");
-
-  var sendableScore = [];
-  sendableScore.push({
-    player: "Henry",
-    score: 4
-  });
-
-  save(sendableScore, "score.txt");
-  console.log(sendableScore[0].score);
-
-
-
-  //var data = loadJSON("score.json");
-
-  // data.push({
-  //   player: "Henry",
-  //   score: 4
-  // });
-
-  // var json = {
-  //   player: "Ricky".
-  //   score: 4
-  // };
-  //
-  // json.player = "ricky";
-  // json.score = boids.length;
-  //
-  // var newJSON = {
-  //
-  // }
-  // saveJSON(json, "data/score.json");
+  fill(255);
+  text("YOU WIN", width/2, height/2);
+  }
 }
 
 function drawMenuItems(){
@@ -194,6 +175,8 @@ function checkBoidFree(){
         score++;
       }
     }
+
+    if (boids[i].health < 10) if (boids[i].type === true) boids.splice(i,1);
   }
 }
 
@@ -226,7 +209,11 @@ function drawSetting(){
 function mousePressed() {
 
   if (reload === false){
-    bullets.push(new Bullet(mouseX, mouseY, 1));
+    bullets.push(new Bullet(player.loc.x, player.loc.y + 10, 1));
+    bullets.push(new Bullet(player.loc.x + 10, player.loc.y, 1));
+    bullets.push(new Bullet(player.loc.x - 10, player.loc.y, 1));
+    bullets.push(new Bullet(player.loc.x, player.loc.y - 10, 1));
+
     reload = true;
   }
 }
