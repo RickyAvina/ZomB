@@ -50,9 +50,15 @@ Boid.prototype.update = function() {
   this.loc.add(this.vel);
   this.acc.mult(0);
 
-  if (this.type == true)
-     this.health-=0.08;
-
+  if (this.type == true){
+     this.health-=0.09;
+     for (var i = 0; i < boids.length; i++){
+       if (boids[i].type == false){
+         if (this.loc.dist(boids[i].loc) < this.radius*2) this.health-=2;
+       }
+     }
+   }
+   
   if (this.type == false) this.health+= 0.2;
   constrain(this.health, 0, 255);
 
@@ -108,7 +114,7 @@ Boid.prototype.repel = function(){
       this.vel.limit(random(2, 3));
 
       if (this.loc.dist(player.loc) < this.radius+player.rad/2){
-        health--;
+        health-=5;
       }
     }
   }

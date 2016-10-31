@@ -35,8 +35,6 @@ var repellers = [];
 var score;
 var health = 255;
 
-var repeller;
-
 function setup() {
   cnv = createCanvas(innerWidth, innerHeight);
   var x  = (windowWidth - width) / 2;
@@ -46,7 +44,6 @@ function setup() {
   score = 0;
   loadElements();
   time = millis();
-  repeller  = new Repeller(width/2, height/2);
 }
 
 function draw() {
@@ -56,31 +53,27 @@ function draw() {
   runElements();
   checkReload();
 
-  if ((survivors < 1 && score < 5) || (player.health < 1)){
+  if ((survivors < 1 && score < 5) || (health < 1)){
     endGame(false);
   }
 
   if (survivors < 1 && score >= 5){
     endGame(true);
   }
-
-
-  repeller.run();
-
 }
 
 function endGame(didWin){
 
   if (didWin == false){
-    fill(0,0,255);
-    rect(0,0,width/2, height/2);
+    fill(140, 20, 30);
+    rect(0,0,width, height);
     fill(255);
-    text("YOU LOSE");
+    text("YOU LOSE", width/2, height/2);
   } else {
-  fill(40, 50, 80);
-  rect(0,0,width, height);
-  fill(255);
-  text("YOU WIN", width/2, height/2);
+    fill(40, 50, 80);
+    rect(0,0,width, height);
+    fill(255);
+    text("YOU WIN", width/2, height/2);
   }
 }
 
@@ -129,15 +122,10 @@ function loadElements(){
 }
 
 function loadBoids(){
-  for (var i = 0; i < attractors.length; i++){
-    boids.push(new Boid(attractors[i].loc.x + random(-10, 10), attractors[i].loc.y + random(-10, 10), true));
-  }
-
+  for (var i = 0; i < attractors.length; i++) boids.push(new Boid(attractors[i].loc.x + random(-10, 10), attractors[i].loc.y + random(-10, 10), true));
   survivors = boids.length;
+  for (var i = 0; i < 20; i++) boids.push(new Boid(random(150 + 15, width - 10 - 15), random(10 + 15, height - 60 - 15), false));
 
-  for (var i = 0; i < 20; i++){
-    boids.push(new Boid(random(150 + 15, width - 10 - 15), random(10 + 15, height - 60 - 15), false));
-  }
 }
 
 function loadAtrractors(){
@@ -172,11 +160,16 @@ function checkBoidFree(){
       if (boids[i].type == true){
         survivors--;
         boids.splice(i, 1);
+        boids.push(new Boid(random(150 + 15, width - 10 - 15), random(10 + 15, height - 60 - 15), false));
         score++;
       }
     }
 
-    if (boids[i].health < 10) if (boids[i].type === true) boids.splice(i,1);
+    if (boids[i].health < 10) if (boids[i].type === true){
+      survivors--;
+      boids.splice(i,1);
+      boids.push(new Boid(random(150 + 15, width - 10 - 15), random(10 + 15, height - 60 - 15), false));
+    }
   }
 }
 
