@@ -51,14 +51,14 @@ Boid.prototype.update = function() {
   this.acc.mult(0);
 
   if (this.type == true){
-     this.health-=0.09;
+     this.health-=0.08;
      for (var i = 0; i < boids.length; i++){
        if (boids[i].type == false){
          if (this.loc.dist(boids[i].loc) < this.radius*2) this.health-=2;
        }
      }
    }
-   
+
   if (this.type == false) this.health+= 0.2;
   constrain(this.health, 0, 255);
 

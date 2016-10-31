@@ -16,7 +16,7 @@ var cnv;
 var player;
 var boids = [];
 
-var survivors = 5;
+var survivors;
 
 var attractors = [];
 
@@ -33,7 +33,9 @@ var walls = [];
 var repellers = [];
 
 var score;
-var health = 255;
+var health;
+
+var gameStarted;
 
 function setup() {
   cnv = createCanvas(innerWidth, innerHeight);
@@ -41,24 +43,48 @@ function setup() {
   var y = (windowHeight - height) / 2;
   cnv.position(x, y);
   fill(200, 200, 0);
+  gameStarted = false;
   score = 0;
+  survivors = 5;
+  health = 255;
+  loadElements();
+  time = millis();
+}
+
+function startGame(){
+  score = 0;
+  survivors = 5;
+  health = 255;
   loadElements();
   time = millis();
 }
 
 function draw() {
   background(180);
-  drawSetting();
-  drawMenuItems();
-  runElements();
-  checkReload();
 
-  if ((survivors < 1 && score < 5) || (health < 1)){
-    endGame(false);
-  }
+  if (gameStarted){
+    drawSetting();
+    drawMenuItems();
+    runElements();
+    checkReload();
 
-  if (survivors < 1 && score >= 5){
-    endGame(true);
+    if ((survivors < 1 && score < 5) || (health < 1)){
+      endGame(false);
+    }
+
+    if (survivors < 1 && score >= 5){
+      endGame(true);
+    }
+  } else {
+    background(40, 50, 80);
+    fill(255, 240, 240);
+    rect(width/2 - 240, height/2 - 240, 480, 480);
+    fill(0);
+    text("Start Game?", width/2, height/2 - 40);
+    fill(0);
+    rect(width/2 - 40, height/2 - 30, 80, 120);
+
+    if (mouseIsPressed) gameStarted = true;
   }
 }
 
@@ -75,6 +101,17 @@ function endGame(didWin){
     fill(255);
     text("YOU WIN", width/2, height/2);
   }
+
+    fill(255, 230, 240);
+    rect(mouseX, mouseY, 60, 40);
+
+    if (mouseIsPressed) playAgain();
+}
+
+function playAgain(){
+  gameStarted = false;
+  nullifyArrays();
+  startGame();
 }
 
 function drawMenuItems(){
@@ -113,12 +150,21 @@ function loadElements(){
   walls.push([createVector(1200, 500), createVector(1200, height-10)]);
 
   for (var i = 0; i < walls.length; i++){
-    for (var j = walls[i][0].x; j <= walls[i][1].x; j+=5){
-      for (var k = walls[i][0].y; k <= walls[i][1].y; k+=5){
-      repellers.push(new Repeller(j, k));
+    for (var j = walls[i][0].x; j <= walls[i][1].x; j+=10){
+      for (var k = walls[i][0].y; k <= walls[i][1].y; k+=10){
+        repellers.push(new Repeller(j, k));
       }
     }
   }
+}
+
+function nullifyArrays(){
+  for (var i = 0; i < walls.length; i++) walls.splice(i, walls.length);
+  for (var i = 0; i < attractors.length; i++) attractors.splice(i,1);
+  for (var i = 0; i < boids.length; i++) boids.splice(i, 1);
+  for (var i = 0; i < repellers.length; i++) repellers.splice(i, 1);
+  player = null;
+  survivors = 0;
 }
 
 function loadBoids(){
