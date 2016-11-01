@@ -36,6 +36,7 @@ var score;
 var health;
 
 var gameStarted;
+var isBeginning;
 
 function setup() {
   cnv = createCanvas(innerWidth, innerHeight);
@@ -44,25 +45,34 @@ function setup() {
   cnv.position(x, y);
   fill(200, 200, 0);
   gameStarted = false;
-  score = 0;
-  survivors = 5;
-  health = 255;
+  isBeginning = false;
+  fill(40, 50, 80);
+  rect(0,0, width, height);
+  fill(255);
+  text("Welcome to ZomB!", width/2 - 80, height/5);
+
+  startGame();
+}
+
+function startGame(){
   loadElements();
   time = millis();
 }
 
-function startGame(){
-  score = 0;
-  survivors = 5;
-  health = 255;
-  loadElements();
-  time = millis();
+function reset(){
+   walls = [];
+   boids = [];
+   attractors = [];
+   score = 0;
+   survivors = 5;
+   health = 255;
+   gameStarted = true;
 }
 
 function draw() {
   background(180);
 
-  if (gameStarted){
+  if (gameStarted === true){
     drawSetting();
     drawMenuItems();
     runElements();
@@ -76,6 +86,7 @@ function draw() {
       endGame(true);
     }
   } else {
+
     background(40, 50, 80);
     fill(255, 240, 240);
     rect(width/2 - 240, height/2 - 240, 480, 480);
@@ -84,8 +95,13 @@ function draw() {
     fill(0);
     rect(width/2 - 40, height/2 - 30, 80, 120);
 
-    if (mouseIsPressed) gameStarted = true;
+    if (mouseIsPressed){
+      reset();
+      startGame();
+    }
   }
+
+  console.log(gameStarted);
 }
 
 function endGame(didWin){
@@ -94,7 +110,7 @@ function endGame(didWin){
     fill(140, 20, 30);
     rect(0,0,width, height);
     fill(255);
-    text("YOU LOSE", width/2, height/2);
+    text("YOU LOSE", width/2, height/5);
   } else {
     fill(40, 50, 80);
     rect(0,0,width, height);
@@ -103,14 +119,22 @@ function endGame(didWin){
   }
 
     fill(255, 230, 240);
-    rect(mouseX, mouseY, 60, 40);
+    text("Play again?", width/2 - 30, height/2 + 40);
 
-    if (mouseIsPressed) playAgain();
+
+    if (mouseX >= width/2 - 40 && mouseX <= width/2 - 40 + 220){
+      if (mouseY >= height/2 + 80 && mouseY <= height/2 + 80 + 80){
+        fill(100, 100, 100);
+
+        if (mouseIsPressed) playAgain();
+      }
+    }
+
+    rect(width/2 - 40, height/2 + 80, 220, 80);
 }
 
 function playAgain(){
   gameStarted = false;
-  nullifyArrays();
   startGame();
 }
 
@@ -156,15 +180,6 @@ function loadElements(){
       }
     }
   }
-}
-
-function nullifyArrays(){
-  for (var i = 0; i < walls.length; i++) walls.splice(i, walls.length);
-  for (var i = 0; i < attractors.length; i++) attractors.splice(i,1);
-  for (var i = 0; i < boids.length; i++) boids.splice(i, 1);
-  for (var i = 0; i < repellers.length; i++) repellers.splice(i, 1);
-  player = null;
-  survivors = 0;
 }
 
 function loadBoids(){
